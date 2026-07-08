@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Casino Canvas */
+  --color-casino-bg: #0A0F0D;
+  --color-casino-surface-low: #0D1F16;
+  --color-casino-surface-high: #163E2B;
+
+  /* Neon Accents */
+  --color-neon-green: #10B981;
+  --color-neon-gold: #FBBF24;
+  --color-neon-red: #EF4444;
+  --color-neon-crimson: #DC2626;
+
+  /* Text */
+  --color-text-primary: #E8F5E9;
+  --color-text-secondary: #A3C4A8;
+  --color-text-muted: #5A7A5E;
+
+  /* Tile States */
+  --color-tile-correct: #10B981;
+  --color-tile-present: #FBBF24;
+  --color-tile-absent: #1F2937;
+  --color-tile-border: #2D4A3E;
+
+  /* Shadows */
+  --shadow-neon-green: 0 0 15px rgba(16, 185, 129, 0.4);
+  --shadow-neon-gold: 0 0 15px rgba(251, 191, 36, 0.4);
+  --shadow-neon-red: 0 0 15px rgba(239, 68, 68, 0.5);
+
+  /* Typography */
+  --font-sans: "Inter", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Animations */
+  --animate-shake: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+@keyframes flip-in {
+  0% { transform: rotateX(0deg); }
+  50% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 20px currentColor; }
+}
+
+html {
+  background-color: #0A0F0D;
+  color: #E8F5E9;
+}
+
+body {
+  background-color: #0A0F0D;
+  color: #E8F5E9;
+}
+
+.animate-flip-in {
+  animation: flip-in 0.4s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
