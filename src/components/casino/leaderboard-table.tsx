@@ -16,65 +16,59 @@ interface LeaderboardTableProps {
 
 export function LeaderboardTable({ entries }: LeaderboardTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-tile-border/30 bg-casino-surface-low">
-      <table className="w-full">
+    <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+      <table className="w-full min-w-[400px]">
         <thead>
-          <tr className="border-b border-tile-border/30 text-left">
-            <th className="px-6 py-3 font-heading text-xs uppercase tracking-widest text-text-muted">
-              Rank
-            </th>
-            <th className="px-6 py-3 font-heading text-xs uppercase tracking-widest text-text-muted">
-              Player
-            </th>
-            <th className="px-6 py-3 font-heading text-xs uppercase tracking-widest text-text-muted">
-              Weekly
-            </th>
-            <th className="px-6 py-3 font-heading text-xs uppercase tracking-widest text-text-muted">
-              Hot Streak
-            </th>
-            <th className="px-6 py-3 font-heading text-xs uppercase tracking-widest text-text-muted">
-              Wins
-            </th>
+          <tr className="border-b border-border text-left">
+            <th className="px-4 sm:px-6 py-3 font-label text-xs text-ink-muted">Rank</th>
+            <th className="px-4 sm:px-6 py-3 font-label text-xs text-ink-muted">Player</th>
+            <th className="px-4 sm:px-6 py-3 font-label text-xs text-ink-muted">Weekly</th>
+            <th className="hidden sm:table-cell px-4 sm:px-6 py-3 font-label text-xs text-ink-muted">Hot Streak</th>
+            <th className="hidden sm:table-cell px-4 sm:px-6 py-3 font-label text-xs text-ink-muted">Wins</th>
           </tr>
         </thead>
         <tbody>
           {entries.map((entry) => (
             <tr
               key={entry.rank}
-              className={`border-b border-tile-border/10 transition-colors hover:bg-casino-surface-high ${
-                entry.rank <= 3 ? "bg-casino-surface-high/50" : ""
+              className={`border-b border-border/50 transition-colors hover:bg-surface-elevated ${
+                entry.rank <= 3 ? "bg-surface-elevated" : ""
               }`}
             >
-              <td className="px-6 py-4">
+              <td className="px-4 sm:px-6 py-3 sm:py-4">
                 <span
-                  className={`font-heading text-lg font-bold ${
+                  className={`font-mono text-base sm:text-lg font-semibold tabular-nums ${
                     entry.rank === 1
-                      ? "text-neon-gold"
-                      : entry.rank === 2
-                      ? "text-text-secondary"
-                      : entry.rank === 3
-                      ? "text-orange-400"
-                      : "text-text-muted"
+                      ? "text-gold"
+                      : entry.rank === 2 || entry.rank === 3
+                      ? "text-ink-secondary"
+                      : "text-ink-muted"
                   }`}
                 >
-                  {entry.rank === 1 ? "👑" : `#${entry.rank}`}
+                  #{entry.rank}
                 </span>
               </td>
-              <td className="px-6 py-4 font-heading font-bold text-text-primary">
-                {entry.username}
+              <td className="px-4 sm:px-6 py-3 sm:py-4">
+                <div>
+                  <span className="font-medium text-sm sm:text-base text-ink">{entry.username}</span>
+                  {entry.heatStreak >= 3 && (
+                    <span className="ml-1.5 font-label text-[10px] text-gold">
+                      {entry.heatStreak >= 10 ? "2x" : entry.heatStreak >= 5 ? "1.5x" : "1.2x"}
+                    </span>
+                  )}
+                </div>
+                <div className="sm:hidden mt-1 flex gap-3 text-xs text-ink-muted">
+                  <span>Streak: <span className="font-mono text-gold">{entry.heatStreak}</span></span>
+                  <span>Wins: <span className="font-mono text-accent">{entry.totalWins}</span></span>
+                </div>
               </td>
-              <td className="px-6 py-4 font-heading text-neon-green font-bold">
+              <td className="px-4 sm:px-6 py-3 sm:py-4 font-mono text-sm sm:text-base tabular-nums text-accent">
                 {entry.weeklyChips.toLocaleString()}
               </td>
-              <td className="px-6 py-4">
-                <span className="font-heading text-neon-gold">{entry.heatStreak}</span>
-                {entry.heatStreak >= 3 && (
-                  <span className="ml-1 text-xs text-neon-green">
-                    ({entry.heatStreak >= 10 ? "2x" : entry.heatStreak >= 5 ? "1.5x" : "1.2x"})
-                  </span>
-                )}
+              <td className="hidden sm:table-cell px-4 sm:px-6 py-3 sm:py-4">
+                <span className="font-mono tabular-nums text-gold">{entry.heatStreak}</span>
               </td>
-              <td className="px-6 py-4 font-heading text-neon-green">{entry.totalWins}</td>
+              <td className="hidden sm:table-cell px-4 sm:px-6 py-3 sm:py-4 font-mono tabular-nums text-accent">{entry.totalWins}</td>
             </tr>
           ))}
         </tbody>

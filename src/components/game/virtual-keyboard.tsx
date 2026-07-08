@@ -18,10 +18,10 @@ const ROWS = [
 ];
 
 const stateStyles: Record<TileState, string> = {
-  correct: "bg-tile-correct border-tile-correct text-white shadow-neon-green",
-  present: "bg-tile-present border-tile-present text-black shadow-neon-gold",
-  absent: "bg-tile-absent border-tile-absent text-text-muted opacity-40 pointer-events-none",
-  empty: "bg-casino-surface-low border-tile-border text-text-primary hover:bg-casino-surface-high",
+  correct: "bg-tile-correct border-tile-correct text-tile-correct-text",
+  present: "bg-tile-present border-tile-present text-tile-present-text",
+  absent: "bg-tile-absent border-tile-absent text-tile-absent-text opacity-40 pointer-events-none",
+  empty: "bg-surface-elevated border-border text-ink hover:bg-surface-hover active:bg-surface-hover",
 };
 
 export function VirtualKeyboard({
@@ -45,12 +45,12 @@ export function VirtualKeyboard({
   };
 
   return (
-    <div className="flex flex-col items-center gap-1.5">
+    <div className="w-full max-w-[500px] flex flex-col items-center gap-1 sm:gap-1.5">
       {ROWS.map((row, rowIdx) => (
-        <div key={rowIdx} className="flex gap-1.5">
+        <div key={rowIdx} className="flex w-full gap-[3px] sm:gap-1.5">
           {row.map((key) => {
             const state = keyboardState[key] || "empty";
-            const isWide = key === "ENTER" || key === "\u232B";
+            const isAction = key === "ENTER" || key === "\u232B";
 
             return (
               <button
@@ -58,14 +58,25 @@ export function VirtualKeyboard({
                 onClick={() => handleKey(key)}
                 disabled={disabled || state === "absent"}
                 className={`
-                  flex items-center justify-center rounded-lg border-2
-                  font-heading text-sm font-bold transition-all duration-150
-                  ${isWide ? "h-14 w-[68px] text-xs" : "h-14 w-10"}
+                  flex items-center justify-center rounded-md border font-label text-xs
+                  transition-colors duration-150
+                  h-11 sm:h-14
+                  ${isAction ? "flex-[1.5]" : "flex-1 min-w-0"}
                   ${stateStyles[state]}
-                  ${disabled ? "opacity-50 cursor-not-allowed" : "active:scale-95"}
+                  ${disabled ? "opacity-50 cursor-not-allowed" : "active:scale-95 touch-manipulation"}
                 `}
               >
-                {key}
+                <span className="truncate">
+                  {key === "\u232B" ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+                      <line x1="18" y1="9" x2="12" y2="15" />
+                      <line x1="12" y1="9" x2="18" y2="15" />
+                    </svg>
+                  ) : (
+                    key
+                  )}
+                </span>
               </button>
             );
           })}

@@ -50,27 +50,27 @@ export function ModeSelector({ bankroll }: ModeSelectorProps) {
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
       {modes.map((mode) => {
         const locked = bankroll < mode.required;
         const canAfford = bankroll >= mode.cost;
         return (
           <div
             key={mode.id}
-            className={`relative rounded-xl border bg-casino-surface-low p-6 transition-all ${
+            className={`rounded-xl border bg-surface p-5 sm:p-6 transition-all ${
               locked
-                ? "border-tile-border/20 opacity-50"
-                : "border-tile-border/30 hover:border-neon-green/60 hover:shadow-neon-green"
+                ? "border-border opacity-50"
+                : "border-border hover:border-accent active:border-accent"
             }`}
           >
-            <h3 className="font-heading text-lg font-bold text-text-primary">{mode.title}</h3>
-            <p className="mt-2 text-sm text-text-secondary">{mode.desc}</p>
+            <h3 className="text-base sm:text-lg font-semibold text-ink">{mode.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-secondary">{mode.desc}</p>
             <div className="mt-4 flex items-center justify-between">
-              <span className="font-heading text-sm text-text-muted">{mode.cost} chips</span>
+              <span className="font-label text-xs text-ink-muted">{mode.cost} chips</span>
               <button
                 onClick={() => handlePlay(mode.id)}
                 disabled={locked || !canAfford || loading === mode.id}
-                className="rounded-lg bg-neon-green px-4 py-2 font-heading text-sm font-bold text-casino-bg transition-all hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg bg-accent px-4 py-2.5 sm:py-2 font-label text-xs text-white transition-all hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.97]"
               >
                 {loading === mode.id ? "Loading..." : locked ? "Locked" : "Play"}
               </button>

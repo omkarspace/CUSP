@@ -32,17 +32,15 @@ export default async function LeaderboardPage() {
   return (
     <>
       <Nav userEmail={user?.email} />
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div>
-            <h1 className="font-heading text-3xl font-bold text-text-primary">
-              The Board
-            </h1>
-            <p className="text-sm text-text-muted">Weekly leaderboard — resets Monday</p>
+            <h1 className="text-xl sm:text-2xl font-semibold text-ink">The Board</h1>
+            <p className="text-sm text-ink-secondary">Weekly leaderboard — resets Monday</p>
           </div>
         </div>
         <LeaderboardTable entries={entries} currentUserId={user?.id} />
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <ShareCard
             username={user?.email?.split("@")[0] || "Player"}
             rank={userRank}

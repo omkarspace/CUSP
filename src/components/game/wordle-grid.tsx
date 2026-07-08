@@ -15,17 +15,10 @@ interface WordleGridProps {
 }
 
 const stateStyles: Record<TileState, string> = {
-  correct: "bg-tile-correct border-tile-correct text-white",
-  present: "bg-tile-present border-tile-present text-black",
-  absent: "bg-tile-absent border-tile-absent text-text-muted",
-  empty: "bg-transparent border-tile-border text-text-primary",
-};
-
-const landStyles: Record<TileState, string> = {
-  correct: "shadow-neon-green",
-  present: "shadow-neon-gold",
-  absent: "opacity-60",
-  empty: "",
+  correct: "bg-tile-correct border-tile-correct text-tile-correct-text",
+  present: "bg-tile-present border-tile-present text-tile-present-text",
+  absent: "bg-tile-absent border-tile-absent text-tile-absent-text",
+  empty: "bg-transparent border-tile-border text-ink",
 };
 
 export function WordleGrid({
@@ -48,11 +41,11 @@ export function WordleGrid({
   };
 
   return (
-    <div className="flex flex-col items-center gap-1.5">
+    <div className="flex flex-col items-center gap-1.5 sm:gap-2">
       {boardGrid.map((row, rowIdx) => (
         <motion.div
           key={rowIdx}
-          className="flex gap-1.5"
+          className="flex gap-1 sm:gap-1.5"
           animate={
             rowIdx === currentRow && shakeRow
               ? { x: [0, -4, 4, -4, 4, -4, 4, 0] }
@@ -74,11 +67,12 @@ export function WordleGrid({
                 <motion.div
                   key={`${colIdx}-${showFlip ? "revealed" : "hidden"}`}
                   className={`
-                    flex h-14 w-14 items-center justify-center
-                    rounded-lg border-2 font-heading text-2xl font-bold
+                    flex items-center justify-center
+                    rounded-md border-2 font-semibold
+                    h-12 w-12 sm:h-14 sm:w-14
+                    text-base sm:text-lg
                     ${stateStyles[state]}
-                    ${hasLanded && state !== "empty" ? landStyles[state] : ""}
-                    ${isActive ? "scale-105 border-white" : ""}
+                    ${isActive ? "scale-105 border-accent" : ""}
                   `}
                   initial={showFlip ? { rotateX: 0 } : undefined}
                   animate={showFlip ? { rotateX: [0, 90, 0] } : undefined}

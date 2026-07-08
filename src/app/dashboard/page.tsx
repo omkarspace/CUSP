@@ -43,37 +43,37 @@ export default async function DashboardPage() {
   return (
     <>
       <Nav userEmail={user.email} />
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex items-center justify-between rounded-xl border border-tile-border/30 bg-casino-surface-low px-6 py-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <h1 className="font-heading text-xl font-bold text-text-primary">
-                Welcome, {profile.username}
-              </h1>
-              <span className="rounded-full border border-neon-gold/30 bg-neon-gold/10 px-3 py-0.5 font-heading text-xs text-neon-gold">
-                {TIER_NAMES[compsLevel] || "Bronze"}
-              </span>
-            </div>
-            <p className="text-sm text-text-secondary">
-              Hot Streak: <span className="text-neon-gold font-bold">{profile.heat_streak}</span>
-              {profile.heat_streak >= 3 && (
-                <span className="ml-2 text-neon-green">
-                  ({profile.heat_streak >= 10 ? "2.0x" : profile.heat_streak >= 5 ? "1.5x" : "1.2x"} multiplier)
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+        <div className="rounded-xl border border-border bg-surface p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h1 className="text-lg sm:text-xl font-semibold text-ink">
+                  Welcome, {profile.username}
+                </h1>
+                <span className="rounded-full border border-gold/30 bg-gold-soft px-3 py-0.5 font-label text-[11px] text-gold">
+                  {TIER_NAMES[compsLevel] || "Bronze"}
                 </span>
-              )}
-            </p>
-          </div>
-          <div className="text-right">
-            <span className="font-heading text-xs uppercase tracking-widest text-text-muted">
-              Bankroll
-            </span>
-            <div className="font-heading text-3xl font-bold text-neon-green">
-              {profile.bankroll} chips
+              </div>
+              <p className="text-sm text-ink-secondary">
+                Hot Streak: <span className="font-semibold text-gold">{profile.heat_streak}</span>
+                {profile.heat_streak >= 3 && (
+                  <span className="ml-1 text-ink-muted">
+                    ({profile.heat_streak >= 10 ? "2.0x" : profile.heat_streak >= 5 ? "1.5x" : "1.2x"})
+                  </span>
+                )}
+              </p>
+            </div>
+            <div className="text-left sm:text-right">
+              <span className="font-label text-xs text-ink-muted">Bankroll</span>
+              <div className="font-mono text-2xl sm:text-3xl font-semibold tracking-tight text-accent">
+                {profile.bankroll.toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <DailyWheel
             bankroll={profile.bankroll}
             loginStreak={profile.login_streak || 0}
@@ -81,11 +81,11 @@ export default async function DashboardPage() {
           />
         </div>
 
-        <div className="mt-8">
-          <h2 className="font-heading text-lg font-bold text-text-primary mb-4">
-            Choose Your Game
-          </h2>
-          <ModeSelector bankroll={profile.bankroll} heatStreak={profile.heat_streak} />
+        <div className="mt-6 sm:mt-8">
+          <h2 className="text-lg font-semibold text-ink">Choose Your Game</h2>
+          <div className="mt-3 sm:mt-4">
+            <ModeSelector bankroll={profile.bankroll} heatStreak={profile.heat_streak} />
+          </div>
         </div>
       </main>
     </>

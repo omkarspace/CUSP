@@ -31,45 +31,46 @@ export function ActionDeck({
   return (
     <div className="flex flex-col gap-3">
       {showDoubleDown && (
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={onFold}
-            className="flex-1 rounded-lg border border-neon-gold/50 bg-casino-surface-low px-4 py-3 font-heading text-sm font-bold text-neon-gold transition-all hover:bg-neon-gold/10"
+            className="flex-1 rounded-lg border border-border bg-surface px-4 py-3 sm:py-3 font-label text-xs text-ink-secondary transition-colors hover:bg-surface-elevated active:bg-surface-elevated"
           >
             Fold (Save Chips)
           </button>
           <button
             onClick={onDoubleDown}
-            className="flex-1 rounded-lg border border-neon-red/50 bg-neon-red/20 px-4 py-3 font-heading text-sm font-bold text-neon-red transition-all hover:bg-neon-red/30 animate-pulse-glow"
+            className="flex-1 rounded-lg border border-rose/50 bg-rose-soft px-4 py-3 sm:py-3 font-label text-xs text-rose transition-colors hover:bg-rose-soft/80 active:bg-rose-soft/80"
           >
             Double Down (3x or Bust)
           </button>
         </div>
       )}
 
-      <div className="flex gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <button
           onClick={() => { playSound("hint_use"); onHint("card_count"); }}
           disabled={!canAffordHint("card_count") || hintsUsed.includes("card_count") || cardCountRemaining <= 0}
-          className="flex-1 rounded-lg border border-tile-border/30 bg-casino-surface-low px-3 py-2 text-xs font-bold text-text-secondary transition-all hover:bg-casino-surface-high disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-lg border border-border bg-surface px-2 py-2.5 sm:py-2 text-xs font-medium text-ink-secondary transition-colors hover:bg-surface-elevated active:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
         >
-            Burn 3 (-{HINT_COSTS.card_count})
-          <br />
-          <span className="text-text-muted">{cardCountRemaining} left</span>
+          <span className="block leading-tight">Burn 3</span>
+          <span className="block text-ink-muted mt-0.5">-{HINT_COSTS.card_count} chips</span>
         </button>
         <button
           onClick={() => { playSound("hint_use"); onHint("peek"); }}
           disabled={!canAffordHint("peek") || hintsUsed.includes("peek")}
-          className="flex-1 rounded-lg border border-tile-border/30 bg-casino-surface-low px-3 py-2 text-xs font-bold text-text-secondary transition-all hover:bg-casino-surface-high disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-lg border border-border bg-surface px-2 py-2.5 sm:py-2 text-xs font-medium text-ink-secondary transition-colors hover:bg-surface-elevated active:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Peek Letter (-{HINT_COSTS.peek})
+          <span className="block leading-tight">Peek Letter</span>
+          <span className="block text-ink-muted mt-0.5">-{HINT_COSTS.peek} chips</span>
         </button>
         <button
           onClick={() => { playSound("hint_use"); onHint("insurance"); }}
           disabled={!canAffordHint("insurance") || hintsUsed.includes("insurance")}
-          className="flex-1 rounded-lg border border-tile-border/30 bg-casino-surface-low px-3 py-2 text-xs font-bold text-text-secondary transition-all hover:bg-casino-surface-high disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-lg border border-border bg-surface px-2 py-2.5 sm:py-2 text-xs font-medium text-ink-secondary transition-colors hover:bg-surface-elevated active:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Insurance (-{HINT_COSTS.insurance})
+          <span className="block leading-tight">Insurance</span>
+          <span className="block text-ink-muted mt-0.5">-{HINT_COSTS.insurance} chips</span>
         </button>
       </div>
     </div>

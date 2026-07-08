@@ -3,15 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserTrophies } from "@/actions/trophies";
 
-const TIER_LABELS: Record<string, string> = {
-  BRONZE: "Bronze",
-  SILVER: "Silver",
-  GOLD: "Gold",
-  PLATINUM: "Platinum",
-  DIAMOND: "Diamond",
-  BLACK_CARD: "Black Card",
-};
-
 function getCompsLevel(lifetime: number): string {
   if (lifetime >= 100000) return "BLACK_CARD";
   if (lifetime >= 50000) return "DIAMOND";
@@ -43,52 +34,57 @@ export default async function ProfilePage() {
     : "0.0";
 
   const stats = [
-    { label: "Win Rate", value: `${winRate}%`, color: "text-neon-green" },
-    { label: "Games Played", value: profile.total_games_played, color: "text-text-primary" },
-    { label: "Total Wins", value: profile.total_wins, color: "text-neon-green" },
-    { label: "Bankruptcies", value: profile.total_bankruptcies, color: "text-neon-red" },
-    { label: "Hot Streak", value: profile.heat_streak, color: "text-neon-gold" },
-    { label: "Peak Bankroll", value: profile.highest_ever_bankroll, color: "text-neon-green" },
-    { label: "Login Streak", value: profile.login_streak || 0, color: "text-neon-gold" },
-    { label: "Lifetime Earned", value: profile.lifetime_chips_earned || 0, color: "text-neon-green" },
+    { label: "Win Rate", value: `${winRate}%` },
+    { label: "Games Played", value: profile.total_games_played },
+    { label: "Total Wins", value: profile.total_wins },
+    { label: "Bankruptcies", value: profile.total_bankruptcies },
+    { label: "Hot Streak", value: profile.heat_streak },
+    { label: "Peak Bankroll", value: profile.highest_ever_bankroll },
+    { label: "Login Streak", value: profile.login_streak || 0 },
+    { label: "Lifetime Earned", value: profile.lifetime_chips_earned || 0 },
   ];
+
+  const TIER_LABELS: Record<string, string> = {
+    BRONZE: "Bronze", SILVER: "Silver", GOLD: "Gold",
+    PLATINUM: "Platinum", DIAMOND: "Diamond", BLACK_CARD: "Black Card",
+  };
 
   return (
     <>
       <Nav userEmail={user.email} />
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="font-heading text-3xl font-bold text-text-primary">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-xl sm:text-2xl font-semibold text-ink">
                 {profile.username}
               </h1>
-              <span className="rounded-full border border-neon-gold/30 bg-neon-gold/10 px-3 py-0.5 font-heading text-sm text-neon-gold">
+              <span className="rounded-full border border-gold/30 bg-gold-soft px-3 py-0.5 font-label text-[11px] text-gold">
                 {TIER_LABELS[comps] || "Bronze"}
               </span>
             </div>
-            <p className="text-text-secondary">Profile</p>
+            <p className="text-sm text-ink-secondary">Profile</p>
           </div>
-          <div className="text-right">
-            <span className="font-heading text-xs uppercase tracking-widest text-text-muted">
-              Bankroll
-            </span>
-            <div className="font-heading text-4xl font-bold text-neon-green">
-              {profile.bankroll} chips
+          <div className="text-left sm:text-right">
+            <span className="font-label text-xs text-ink-muted">Bankroll</span>
+            <div className="font-mono text-2xl sm:text-3xl font-semibold tracking-tight text-accent">
+              {profile.bankroll.toLocaleString()}
             </div>
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-xl border border-tile-border/30 bg-casino-surface-low p-6"
+              className="rounded-xl border border-border bg-surface p-4 sm:p-6"
             >
-              <span className="font-heading text-xs uppercase tracking-widest text-text-muted">
-                {stat.label}
-              </span>
-              <div className={`mt-2 font-heading text-3xl font-bold ${stat.color}`}>
+              <span className="font-label text-xs text-ink-muted">{stat.label}</span>
+              <div className={`mt-1 sm:mt-2 font-mono text-xl sm:text-3xl font-semibold tracking-tight truncate ${
+                stat.label === "Hot Streak" || stat.label === "Login Streak" ? "text-gold"
+                : stat.label === "Bankruptcies" ? "text-rose"
+                : "text-accent"
+              }`}>
                 {stat.value}
               </div>
             </div>
@@ -97,17 +93,17 @@ export default async function ProfilePage() {
 
         {trophies.length > 0 && (
           <div className="mt-8">
-            <h2 className="font-heading text-lg font-bold text-text-primary mb-4">
+            <h2 className="text-lg font-semibold text-ink mb-4">
               Trophies ({trophies.length})
             </h2>
             <div className="flex flex-wrap gap-3">
               {trophies.map((t) => (
                 <div
                   key={t.id}
-                  className="rounded-lg border border-neon-gold/30 bg-casino-surface-low px-4 py-2"
+                  className="rounded-lg border border-gold/30 bg-gold-soft px-4 py-2"
                 >
-                  <span className="font-heading text-sm font-bold text-neon-gold">{t.label}</span>
-                  <p className="text-xs text-text-muted">{t.desc}</p>
+                  <span className="text-sm font-semibold text-gold">{t.label}</span>
+                  <p className="text-xs text-ink-muted">{t.desc}</p>
                 </div>
               ))}
             </div>

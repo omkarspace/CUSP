@@ -21,12 +21,12 @@ export function AuthButton({ email }: { email?: string }) {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <span className="hidden text-xs text-text-muted sm:block">{email}</span>
+    <div className="flex items-center gap-2">
+      <span className="hidden text-xs text-ink-muted sm:block">{email}</span>
       <button
         onClick={handleSignOut}
         disabled={loading}
-        className="rounded-lg border border-tile-border/30 px-3 py-1.5 text-xs font-medium text-text-secondary transition-all hover:border-neon-red/50 hover:text-neon-red disabled:opacity-50"
+        className="rounded-md border border-border px-3 py-2 sm:py-1.5 font-label text-xs text-ink-muted transition-colors hover:border-rose hover:text-rose active:text-rose active:border-rose disabled:opacity-50 touch-manipulation"
       >
         {loading ? "..." : "Sign Out"}
       </button>

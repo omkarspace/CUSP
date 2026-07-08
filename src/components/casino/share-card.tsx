@@ -13,9 +13,9 @@ export function ShareCard({ username, rank, streak, peak }: ShareCardProps) {
   const [copied, setCopied] = useState(false);
 
   const shareText = [
-    "🎰 CUSP - The Board",
-    `Rank: #${rank} | Hot Streak: ${streak} 🔥 | Peak: ${peak.toLocaleString()} chips`,
-    "Think you can beat me? 👑",
+    "CUSP",
+    `Rank: #${rank} | Hot Streak: ${streak} | Peak: ${peak.toLocaleString()} chips`,
+    "On the edge of a win",
   ].join("\n");
 
   async function handleCopy() {
@@ -29,18 +29,18 @@ export function ShareCard({ username, rank, streak, peak }: ShareCardProps) {
   }
 
   return (
-    <div className="rounded-xl border border-tile-border/30 bg-casino-surface-low p-6">
+    <div className="rounded-xl border border-border bg-surface p-4 sm:p-6">
       <div className="mb-4 space-y-1">
-        <p className="font-heading text-xs uppercase tracking-widest text-text-muted">
+        <p className="font-label text-xs text-ink-muted">
           Your Player Card
         </p>
-        <pre className="whitespace-pre-wrap rounded-lg bg-casino-surface-high p-4 font-heading text-sm leading-relaxed text-text-primary">
+        <pre className="whitespace-pre-wrap rounded-lg bg-surface-elevated p-3 sm:p-4 font-mono text-xs sm:text-sm leading-relaxed text-ink">
           {shareText}
         </pre>
       </div>
       <button
         onClick={handleCopy}
-        className="w-full cursor-pointer rounded-lg border border-neon-green/40 bg-neon-green/10 px-4 py-2 font-heading text-sm font-semibold text-neon-green transition-colors hover:bg-neon-green/20 active:bg-neon-green/30"
+        className="w-full cursor-pointer rounded-lg border border-gold/40 bg-gold-soft px-4 py-3 sm:py-2 font-label text-xs text-gold transition-colors hover:bg-gold-soft/80 active:scale-[0.97]"
       >
         {copied ? "Copied!" : "Copy Shareable Card"}
       </button>

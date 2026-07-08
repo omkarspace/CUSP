@@ -1,209 +1,239 @@
-# CUSP — Engagement & Retention Design
-
-## Overview
-
-A thin meta-game layer over the existing CUSP game. No new game modes, no complex UI. Six interconnected features that add daily ritual, progression, and social status.
-
+---
+name: CUSP
+description: On the edge of a win
+colors:
+  accent: "#0D7377"
+  accent-soft: "#E8F4F4"
+  accent-dark: "#0A5C5E"
+  gold: "#B8862C"
+  gold-soft: "#FDF4E3"
+  rose: "#B84A4A"
+  rose-soft: "#FDF0F0"
+  ink: "#1C1B1A"
+  ink-secondary: "#6B6560"
+  ink-muted: "#9C9590"
+  surface: "#FFFFFF"
+  surface-elevated: "#F0EDE8"
+  canvas: "#F5F3EF"
+  border: "#E2DDD8"
+  tile-correct-bg: "#0D7377"
+  tile-correct-text: "#FFFFFF"
+  tile-present-bg: "#B8862C"
+  tile-present-text: "#FFFFFF"
+  tile-absent-bg: "#E2DDD8"
+  tile-absent-text: "#9C9590"
+  dark-accent: "#1A8A8E"
+  dark-accent-soft: "#0D2425"
+  dark-gold: "#D4A44A"
+  dark-gold-soft: "#1E190E"
+  dark-rose: "#D46A6A"
+  dark-rose-soft: "#2A1515"
+  dark-ink: "#EDEBE9"
+  dark-ink-secondary: "#8A8480"
+  dark-ink-muted: "#5E5956"
+  dark-surface: "#1C1B1A"
+  dark-surface-elevated: "#242322"
+  dark-canvas: "#161514"
+  dark-border: "#33312E"
+  dark-tile-correct-bg: "#1A8A8E"
+  dark-tile-correct-text: "#FFFFFF"
+  dark-tile-present-bg: "#D4A44A"
+  dark-tile-present-text: "#1C1B1A"
+  dark-tile-absent-bg: "#33312E"
+  dark-tile-absent-text: "#5E5956"
+typography:
+  display:
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "2.5rem"
+    fontWeight: 600
+    lineHeight: 1.1
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.01em"
+  title:
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 600
+    lineHeight: 1.3
+  body:
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.5
+  label:
+    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 500
+    lineHeight: 1.2
+    letterSpacing: "0.04em"
+  mono:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.4
+rounded:
+  sm: "4px"
+  md: "8px"
+  lg: "12px"
+  xl: "16px"
+spacing:
+  xs: "4px"
+  sm: "8px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
+  xxl: "48px"
 ---
 
-## 1. Casino Terminology Rename
+# Design System: CUSP
 
-| Current | New | Scope |
-|---|---|---|
-| Heat Streak | **Hot Streak** | Global find-replace |
-| Daily High Stakes | **The Daily Jackpot** | mode-selector, lobby |
-| Infinite Cash Run | **The Grind** | mode-selector |
-| High Roller Lounge | **The Penthouse** | mode-selector |
-| Daily Wheel | **Daily Comp** | daily-wheel component |
-| Hints | **House Perks** | action-deck |
-| Leaderboard | **The Board** | nav, page title |
-| High-Rollers Lounge | **The Board** | leaderboard page |
-| Cashier | **Profile** | nav |
-| Lobby | **Lobby** | nav (unchanged) |
+## 1. Overview
 
----
+**Creative North Star: "The Edge"**
 
-## 2. Difficulty Levels (Tied to Game Mode)
+CUSP lives in the moment between the guess and the reveal — that charged pause where the outcome hasn't landed yet. The interface is a private high-stakes room, not a casino floor. Every element is stripped to its essential function, then refined. No neon, no Vegas theatrics. The tension comes from typography, spacing, and the quiet confidence of a room that doesn't need to prove itself.
 
-Three word pools instead of one. No UI changes — words are selected server-side based on mode.
+This system rejects the casino cliché (glowing green, flashing gold, roulette-wheel decoration). Instead it evokes the physical objects of the game: felt-textured surfaces, sharp card-stock whites, deep ink on paper, the clean precision of a dealer's table. Warm neutrals ground the experience; deep teal and refined gold signal meaning without shouting.
 
-| Mode | Difficulty | Word Pool | Payout Multiplier |
-|---|---|---|---|
-| The Daily Jackpot | **Standard** | Current word list | 1.0x (unchanged) |
-| The Grind | **Easy → Escalates** | Starts easy, pool narrows per win | 1.0x base (higher volume) |
-| The Penthouse | **Hard** | Rare letters, fewer vowels | 2.0x base payouts |
+**Key Characteristics:**
+- Warm neutral foundation, not cool gray or beige — the canvas has presence
+- One sans family carries the full hierarchy; weight and spacing do the work
+- Light and dark modes that share the same accent language, not separate brands
+- Borders define surfaces, not shadows — depth through layering, not elevation
+- Tiles are the only decorative element; everything else recedes
 
-### Penthouse unlock rework
-- Entry cost: 50 chips (same)
-- Unlock: 5,000 chips bankroll (same)
-- Difficulty: Only words with rare letters (J, Q, X, Z, V, K, W) or unusual letter patterns
-- Payout: All payouts multiplied by 2x to compensate for difficulty
+## 2. Colors: The Felt Palette
 
-### The Grind escalation
-- Wins 1-3: Easy pool (common letters, high-frequency words)
-- Wins 4-6: Standard pool
-- Wins 7+: Hard pool
-- Resets per session (new entry = fresh start)
+Warm neutrals with a deep teal accent. The palette is restrained — the accent appears on ≤10% of any given screen. Color carries information, not decoration.
 
----
+### Primary
+- **Deep Teal** (#0D7377 / dark: #1A8A8E): Primary actions, correct tile states, active selection. Calm and confident. Not green, not blue — a precise midpoint.
 
-## 3. Login Streak (Daily Comp)
+### Neutral
+- **Ink** (#1C1B1A / dark: #EDEBE9): Body text and headings. Near-black with a trace of warmth. Never pure #000.
+- **Ink Secondary** (#6B6560 / dark: #8A8480): Labels, metadata, secondary text.
+- **Ink Muted** (#9C9590 / dark: #5E5956): Placeholders, disabled text, captions.
+- **Canvas** (#F5F3EF / dark: #161514): Page background. A warm off-white with substance; never a clinical white. Dark mode is a warm near-black.
+- **Surface** (#FFFFFF / dark: #1C1B1A): Card, modal, and panel backgrounds.
+- **Surface Elevated** (#F0EDE8 / dark: #242322): Hover states, active cards.
+- **Border** (#E2DDD8 / dark: #33312E): All borders, dividers, and outlines.
 
-Replace the current "claim when broke" wheel with a daily login bonus.
+### Win / Loss
+- **Refined Gold** (#B8862C / dark: #D4A44A): Wins, streaks, tier names, present tile state. Warm, never brassy.
+- **Muted Rose** (#B84A4A / dark: #D46A6A): Errors, losses, destructive actions. Not alarming — precise.
 
-### Mechanics
-- Consecutive days logged in = streak counter
-- Streak resets if >48h without login
-- Bonus chips awarded daily on first visit
+### Named Rules
+**The 10% Rule.** The deep teal accent covers no more than 10% of any given screen. Its rarity is the point. When you see teal, it matters.
 
-### Bonus Scale
-| Day | Bonus |
-|---|---|
-| 1 | 10 chips |
-| 2 | 15 chips |
-| 3 | 25 chips |
-| 4 | 35 chips |
-| 5 | 50 chips |
-| 6 | 75 chips |
-| 7+ | 100 chips |
+**The No-Green Rule.** No pure green — not in buttons, not in tiles, not in accents. "Win" is gold; "correct" is teal. Green belongs to the casino floor; CUSP is upstairs.
 
-### Trophy
-- **"Loyal Patron"** — Reach a 7-day login streak
+## 3. Typography
 
-### DB changes
-- Add `profiles.login_streak INT DEFAULT 0`
-- Add `profiles.last_login_date DATE`
+**Body Font:** Inter (with `ui-sans-serif, system-ui, sans-serif` fallback)
+**Mono Font:** JetBrains Mono (for chip counts, scores, tabular data)
 
-### Implementation
-- On dashboard load (server component), check if today > last_login_date
-- If yes: increment streak, award bonus, update last_login_date
-- If >2 days gap: reset streak to 1, award day-1 bonus
-- The `DailyWheel` component becomes the "Daily Comp" claim UI
+**Character:** Single-family refinement. Inter's quiet precision carries everything from the hero to the keyboard key. Weight contrast does the work of hierarchy; no display font needed. The mono face signals "numbers worth reading" — bankroll, streak counts, row counters.
 
----
+### Hierarchy
+- **Display** (Semi-Bold 600, 2.5rem/40px, 1.1): The CUSP wordmark and page-level H1s only. Never used in-body.
+- **Headline** (Semi-Bold 600, 1.5rem/24px, 1.25): Section headers — "The Board", "Play", "Profile".
+- **Title** (Semi-Bold 600, 1.125rem/18px, 1.3): Card titles, mode names.
+- **Body** (Regular 400, 0.9375rem/15px, 1.5): Running text, descriptions. Max line length 65ch.
+- **Label** (Medium 500, 0.8125rem/13px, 1.2, +0.04em tracking): Buttons, table headers, form labels, uppercase as needed.
+- **Mono** (Regular 400, 0.9375rem/15px, 1.4): Chip amounts, streak numbers, scores.
+- **Document** (Semi-Bold 500, 0.875rem/14px, 1.3): The optional body one step between Label and Body, for compact info in game-state areas or dense rows that need to stay readable without drawing focus.
 
-## 4. Comps Levels (Tiers)
+### Named Rules
+**The Single-Family Rule.** No serif, no display font. All headings, body, buttons, labels, and data are Inter. The hierarchy is expressed through weight (400 / 500 / 600), size (0.8125–2.5rem), and letter-spacing. JetBrains Mono is the single exception for numeric display.
 
-Lifetime chips earned (sum of all payouts across all games) = XP for tier progression.
+## 4. Elevation
 
-### Tiers
+This system uses tonal layering, not shadows. Depth is conveyed through surface color: canvas → surface → surface-elevated. Each step shifts the background by one lightness tick on the same warm-neutral axis.
 
-| Tier | Chips Earned | Perks |
-|---|---|---|
-| Bronze | 0 | None |
-| Silver | 1,000 | Free Card Count once/day |
-| Gold | 5,000 | Free Insurance once/day |
-| Platinum | 20,000 | 2x Daily Comp |
-| Diamond | 50,000 | Custom tile color |
-| Black Card | 100,000 | All above + weekly bonus |
+Cards and containers sit at `surface` against the `canvas` background. Interactive states (hover, active) shift to `surface-elevated`. No drop shadows, no floating elements.
 
-### Trophy
-- **"High Roller"** — Reach Platinum tier (20K lifetime chips)
-- **"Whale"** — Reach Black Card (100K)
+### Named Rules
+**The No-Shadow Rule.** No `box-shadow` on any surface element. Buttons, cards, modals, dropdowns — all flat. Depth lives in the color stack, not in light simulation. Shadows are reserved exclusively for tile state feedback (correct / present glow on reveal).
 
-### DB changes
-- Add `profiles.comps_level TEXT DEFAULT 'BRONZE'`
-- Add `profiles.lifetime_chips_earned INT DEFAULT 0`
+## 5. Components
 
-### Logic
-- Update `lifetime_chips_earned` in `submitGuess` when game ends (WON status)
-- Calculate tier from lifetime_chips_earned in profile queries
-- Perks checked server-side in game-actions
+For each component, lead with a short character line, then specify shape, color assignment, states, and any distinctive behavior.
 
----
+### Buttons
+- **Shape:** Gently rounded corners (lg: 12px). No shadows. Capital case (Label weight).
+- **Primary:** Deep teal background, white text. 12px 24px padding. Hover: dark-teal background. Active: scale 0.98.
+- **Secondary:** Transparent background, ink text, 1px solid border (border). Hover: surface-elevated background.
+- **Ghost:** Transparent, ink-secondary text. Minimal padding (8px 16px). Hover: ink text.
+- **Danger:** Muted rose background or rose border variant. Confirms destructive intent.
+- All buttons: transition 150ms ease, no decorative glow.
 
-## 5. Trophies (6 Achievements)
+### Cards / Containers
+- **Corner Style:** Generous rounded corners (xl: 16px).
+- **Background:** Surface color, 1px border (border).
+- **Shadow Strategy:** None (see No-Shadow Rule).
+- **Internal Padding:** lg (24px).
+- Hover: surface-elevated background (where interactive).
 
-Simple achievement badges stored in a `trophies` table. Shown on profile and Player Card.
+### Inputs / Fields
+- **Style:** 1px border (border), surface background, md (8px) radius.
+- **Focus:** Border shifts to accent. No glow.
+- **Placeholder:** Ink-muted color.
+- **Error:** Border shifts to rose.
 
-### Trophy List
+### Navigation
+- **Style:** Clean top bar, canvas background, 1px bottom border.
+- **Content:** Logo/wordmark on left, navigation links center-left, auth + theme toggle on right.
+- **Nav links:** Label style, ink-muted text. Active: ink text with subtle underline indicator.
+- **Mobile:** Responsive collapse with hamburger.
 
-| Trophy | Trigger | Rarity |
-|---|---|---|
-| **"First Win"** | Win your first game | Common |
-| **"Unstoppable"** | Reach 10-win Hot Streak | Rare |
-| **"High Roller"** | Reach Platinum tier (20K lifetime) | Rare |
-| **"Whale"** | Reach Black Card (100K lifetime) | Legendary |
-| **"The Grinder"** | Play 100 games | Epic |
-| **"Board King"** | Finish #1 on The Board (weekly) | Legendary |
-| **"Lucky Guess"** | Win on Row 1 | Rare |
-| **"Loyal Patron"** | Reach 7-day login streak | Epic |
+### Tiles (Wordle Grid)
+- **Shape:** Square, md (8px) radius.
+- **Default:** Transparent fill, 2px border (tile-border), ink-muted letter.
+- **Correct:** Deep teal fill, no border, white letter. Soft teal glow on reveal.
+- **Present:** Refined gold fill, no border, white letter. Soft gold glow on reveal.
+- **Absent:** Absent-bg fill, no border, absent-text letter.
+- **Animation:** 3D flip (rotateX) with 100ms stagger per column. 400ms duration.
 
-### DB changes
-- New table: `trophies` (user_id UUID, trophy_id TEXT, earned_at TIMESTAMPTZ)
-- Check and insert trophies on game end + daily login
+### Keyboard Keys
+- **Shape:** Rectangular, md (8px) radius.
+- **Default:** Surface-elevated background, border border, ink text.
+- **Correct:** Deep teal fill, white text.
+- **Present:** Refined gold fill, dark text.
+- **Used:** Absent-bg fill, absent-text.
+- **Action keys (ENTER/DEL):** Slightly wider (68px), label font.
 
----
+### The Player Card (Shareable)
+- **Style:** Code-block aesthetic inside a surface card. Monospace text, elevated surface background for the code area.
+- **Button:** Refined gold soft-bg for the copy button.
 
-## 6. The Board (Weekly Leaderboard)
+### Leaderboard Table
+- **Style:** Clean table, no stripes. Surface-card container, 16px radius.
+- **Headers:** Label style, tracking-widest, ink-muted.
+- **Rows:** Border-bottom dividers. Hover: surface-elevated.
+- **Rank 1:** Gold text.
+- **Rank 2-3:** Ink-secondary text.
 
-Reset-to-zero weekly leaderboard showing chips earned this week.
+## 6. Do's and Don'ts
 
-### Mechanics
-- New `weekly_chips_earned` column on profiles
-- Incremented on each WIN (the escrow payout amount)
-- Resets to 0 every Monday via pg_cron
-- The Board ranks by weekly_chips_earned for the current week
+### Do:
+- **Do** use the full surface family (canvas → surface → surface-elevated) before considering borders. Tonal layering is the primary depth mechanism.
+- **Do** keep the deep teal accent to ≤10% of screen area. It should feel like a precise instrument, not a theme.
+- **Do** use JetBrains Mono for all chip counts, scores, and streak numbers. Numbers are data; treat them as such.
+- **Do** use Refined Gold for wins, streak indicators, and tier badges exclusively. Gold is earned, not decorative.
+- **Do** let whitespace carry the tension. Empty space is the premium move.
+- **Do** animate tile reveals correctly — the 3D flip stagger is the game's signature motion moment.
+- **Do** use `text-wrap: balance` on headings. Uneven line breaks cheapen the precision.
 
-### Rewards (paid Monday)
-| Rank | Prize |
-|---|---|
-| 1 | 500 chips |
-| 2-3 | 200 chips |
-| 4-10 | 100 chips |
-| 11-50 | 25 chips |
-
-### Trophy
-- **"Board King"** — Finish #1 in any week
-
-### DB changes
-- Add `profiles.weekly_chips_earned INT DEFAULT 0`
-
----
-
-## 7. Player Card (Shareable Profile)
-
-Upgrade the existing share-card to show tier, trophies, and stats in a clean card format.
-
-### Content
-- Username
-- Comps Level badge (Bronze → Black Card)
-- Bankroll
-- Hot Streak count
-- Trophy icons (earned trophies displayed)
-- Shareable text/image
-
----
-
-## DB Schema Changes Summary
-
-```sql
--- Profiles additions
-ALTER TABLE profiles ADD COLUMN login_streak INT DEFAULT 0;
-ALTER TABLE profiles ADD COLUMN last_login_date DATE;
-ALTER TABLE profiles ADD COLUMN comps_level TEXT DEFAULT 'BRONZE';
-ALTER TABLE profiles ADD COLUMN lifetime_chips_earned INT DEFAULT 0;
-ALTER TABLE profiles ADD COLUMN weekly_chips_earned INT DEFAULT 0;
-
--- New table
-CREATE TABLE trophies (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES profiles(id) NOT NULL,
-  trophy_id TEXT NOT NULL,
-  earned_at TIMESTAMPTZ DEFAULT now(),
-  UNIQUE(user_id, trophy_id)
-);
-```
-
----
-
-## Implementation Order
-
-| Phase | Items | Effort |
-|---|---|---|
-| **Phase 1** | Casino rename (UI strings) + Difficulty word pools | Small |
-| **Phase 2a** | Login streak + Daily Comp replacement | Small |
-| **Phase 2b** | Comps Levels (tiers) with lifetime earnings | Medium |
-| **Phase 2c** | Trophies (8 badges) with DB table | Medium |
-| **Phase 2d** | Weekly leaderboard with pg_cron reset | Medium |
-| **Phase 2e** | Player Card upgrade | Small |
+### Don't:
+- **Don't** use pure green anywhere. No buttons, no tiles, no backgrounds. "Correct" is teal; "win" is gold.
+- **Don't** use neon effects, glows, or gradients on UI elements. The only glow is on tile reveal animations.
+- **Don't** use casino imagery — no dice, roulette wheels, card suits, or chip stacks as decoration. The casino metaphor lives in the language, not the visuals.
+- **Don't** use shadows on surfaces. The No-Shadow Rule is absolute; depth is tonal.
+- **Don't** use a display font. Inter covers everything.
+- **Don't** use gradient or rainbow text for tier names or badges. Single solid colors only.
+- **Don't** use the tight beige-cream body background that reads as "AI default." The canvas is a warm off-white with actual substance — not sand, not parchment, not cream.
+- **Don't** stack cards inside cards. One level of containment is the limit.

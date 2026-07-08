@@ -175,8 +175,8 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="mx-auto max-w-2xl space-y-6">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 py-4 sm:py-8">
+        <div className="mx-auto max-w-[500px] space-y-4 sm:space-y-6">
           <motion.div
             key={shakeTrigger}
             animate={{ x: [0, -8, 8, -8, 8, -8, 8, -4, 4, -2, 2, 0] }}
@@ -190,7 +190,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
           />
 
           {message && (
-            <div className="rounded-lg bg-casino-surface-high px-4 py-2 text-center font-heading text-sm font-bold text-neon-gold">
+            <div className="rounded-lg bg-gold-soft px-4 py-2 text-center font-document text-sm text-gold">
               {message}
             </div>
           )}
@@ -228,17 +228,17 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
           </div>
 
           {gameStatus !== "IN_PROGRESS" && (
-            <div className="rounded-xl border border-neon-green/30 bg-casino-surface-low p-6 text-center">
-              <h2 className="font-heading text-2xl font-bold text-neon-green">
-                {gameStatus === "WON" ? "Winner Winner!" : gameStatus === "BANKRUPT" ? "Bankruptcy!" : "Folded"}
+            <div className="rounded-xl border border-border bg-surface p-6 text-center">
+              <h2 className="text-2xl font-semibold text-ink">
+                {gameStatus === "WON" ? "Winner" : gameStatus === "BANKRUPT" ? "Bankrupt" : "Folded"}
               </h2>
-              <p className="mt-2 text-text-secondary">{message}</p>
+              <p className="mt-2 text-sm text-ink-secondary">{message}</p>
               <button
                 onClick={() => {
                   resetGame();
                   router.push("/dashboard");
                 }}
-                className="mt-4 rounded-lg bg-neon-green px-6 py-2 font-heading text-sm font-bold text-casino-bg transition-all hover:scale-105"
+                className="mt-4 rounded-lg bg-accent px-6 py-2 font-label text-xs text-white transition-all hover:bg-accent-dark active:scale-[0.98]"
               >
                 Back to Hub
               </button>
