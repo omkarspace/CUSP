@@ -2,6 +2,9 @@ import { Nav } from "@/components/layout/nav";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getUserTrophies } from "@/actions/trophies";
+import { UsernameEditor } from "@/components/profile/username-editor";
+import { getGameHistory } from "@/actions/game-history";
+import { GameHistory } from "@/components/profile/game-history";
 
 function getCompsLevel(lifetime: number): string {
   if (lifetime >= 100000) return "BLACK_CARD";
@@ -27,6 +30,7 @@ export default async function ProfilePage() {
   if (!profile) redirect("/login");
 
   const trophies = await getUserTrophies(user.id);
+  const gameHistory = await getGameHistory();
   const comps = getCompsLevel(profile.lifetime_chips_earned || 0);
 
   const winRate = profile.total_games_played > 0
@@ -56,9 +60,7 @@ export default async function ProfilePage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <h1 className="text-xl sm:text-2xl font-semibold text-ink">
-                {profile.username}
-              </h1>
+              <UsernameEditor initial={profile.username} />
               <span className="rounded-full border border-gold/30 bg-gold-soft px-3 py-0.5 font-label text-[11px] text-gold">
                 {TIER_LABELS[comps] || "Bronze"}
               </span>
@@ -109,6 +111,13 @@ export default async function ProfilePage() {
             </div>
           </div>
         )}
+
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold text-ink mb-4">
+            Game History ({gameHistory.length})
+          </h2>
+          <GameHistory games={gameHistory} />
+        </div>
       </main>
     </>
   );
