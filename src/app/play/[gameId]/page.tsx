@@ -225,13 +225,21 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-7xl px-3 sm:px-6 py-4 sm:py-8">
-        <div className="mx-auto max-w-[500px] space-y-4 sm:space-y-6">
+      <main className="
+        mx-auto max-w-7xl px-3 sm:px-6 py-4
+        sm:h-dvh sm:flex sm:flex-col sm:overflow-hidden sm:py-0
+      ">
+        <div className="
+          mx-auto w-full max-w-[500px]
+          sm:flex sm:flex-col sm:flex-1 sm:max-w-5xl sm:h-full sm:gap-3 sm:py-4 sm:min-h-0
+          space-y-4 sm:space-y-0
+        ">
+          {/* HUD row */}
           <motion.div
             key={shakeTrigger}
             animate={{ x: [0, -8, 8, -8, 8, -8, 8, -4, 4, -2, 2, 0] }}
             transition={{ duration: 0.8 }}
-            className="space-y-6"
+            className="sm:flex-shrink-0 space-y-4"
           >
           <EscrowHud
             currentChips={currentChips}
@@ -244,30 +252,54 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
               {message}
             </div>
           )}
+          </motion.div>
 
-          <div className="flex justify-center">
-            <WordleGrid
-              boardGrid={boardGrid}
-              tileStates={tileStates}
-              currentRow={currentRow}
-              currentCol={currentCol}
-              isRevealing={isRevealing}
-              shakeRow={shakeRow}
+          {/* Middle: grid + actions side by side on web */}
+          <div className="
+            sm:flex-1 sm:flex sm:items-center sm:justify-center sm:gap-6 sm:min-h-0
+          ">
+            <div className="flex justify-center sm:flex-shrink-0">
+              <WordleGrid
+                boardGrid={boardGrid}
+                tileStates={tileStates}
+                currentRow={currentRow}
+                currentCol={currentCol}
+                isRevealing={isRevealing}
+                shakeRow={shakeRow}
+              />
+            </div>
+
+            {/* Actions sidebar — desktop only */}
+            <div className="hidden sm:block sm:w-44 sm:flex-shrink-0">
+              <ActionDeck
+                row={currentRow + 1}
+                currentChips={currentChips}
+                isDoubleDown={isDoubleDownActive}
+                hintsUsed={hintsUsed}
+                cardCountRemaining={cardCountRemaining}
+                onDoubleDown={handleDoubleDown}
+                onFold={handleFold}
+                onHint={handleHint}
+                compact
+              />
+            </div>
+          </div>
+
+          {/* Actions — mobile only, below grid */}
+          <div className="sm:hidden">
+            <ActionDeck
+              row={currentRow + 1}
+              currentChips={currentChips}
+              isDoubleDown={isDoubleDownActive}
+              hintsUsed={hintsUsed}
+              cardCountRemaining={cardCountRemaining}
+              onDoubleDown={handleDoubleDown}
+              onFold={handleFold}
+              onHint={handleHint}
             />
           </div>
 
-          <ActionDeck
-            row={currentRow + 1}
-            currentChips={currentChips}
-            isDoubleDown={isDoubleDownActive}
-            hintsUsed={hintsUsed}
-            cardCountRemaining={cardCountRemaining}
-            onDoubleDown={handleDoubleDown}
-            onFold={handleFold}
-            onHint={handleHint}
-          />
-
-          <div className="flex justify-center">
+          <div className="sm:flex-shrink-0 flex justify-center">
             <VirtualKeyboard
               keyboardState={keyboardState}
               onKeyPress={handleKeyPress}
@@ -277,25 +309,24 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
               burnedLetters={burnedLetters}
             />
           </div>
-
-          {showConfetti && <Confetti />}
-
-          <GameEndModal
-            open={gameStatus !== "IN_PROGRESS"}
-            gameMode={endGameData?.gameMode || ""}
-            targetWord={endGameData?.targetWord || ""}
-            status={(endGameData?.status || gameStatus) as "WON" | "BANKRUPT" | "FOLDED"}
-            finalEscrow={endGameData?.finalEscrow || 0}
-            rowsUsed={endGameData?.rowsUsed || 0}
-            isDoubleDown={endGameData?.isDoubleDown || false}
-            hintsUsed={endGameData?.hintsUsed || []}
-            entryStake={endGameData?.entryStake || 0}
-            insuranceRefund={endGameData?.insuranceRefund || 0}
-            hasInsurance={endGameData?.hasInsurance || false}
-          />
-          </motion.div>
         </div>
       </main>
+
+      {showConfetti && <Confetti />}
+
+      <GameEndModal
+        open={gameStatus !== "IN_PROGRESS"}
+        gameMode={endGameData?.gameMode || ""}
+        targetWord={endGameData?.targetWord || ""}
+        status={(endGameData?.status || gameStatus) as "WON" | "BANKRUPT" | "FOLDED"}
+        finalEscrow={endGameData?.finalEscrow || 0}
+        rowsUsed={endGameData?.rowsUsed || 0}
+        isDoubleDown={endGameData?.isDoubleDown || false}
+        hintsUsed={endGameData?.hintsUsed || []}
+        entryStake={endGameData?.entryStake || 0}
+        insuranceRefund={endGameData?.insuranceRefund || 0}
+        hasInsurance={endGameData?.hasInsurance || false}
+      />
     </>
   );
 }

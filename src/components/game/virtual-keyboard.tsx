@@ -63,7 +63,7 @@ export function VirtualKeyboard({
                 className={`
                   relative flex items-center justify-center rounded-md border font-label text-xs
                   transition-colors duration-150
-                  h-11 sm:h-14
+                  h-11 sm:h-11 md:h-12
                   ${isAction ? "flex-[1.5]" : "flex-1 min-w-0"}
                   ${stateStyles[state]}
                   ${isBurned ? "opacity-30" : ""}
