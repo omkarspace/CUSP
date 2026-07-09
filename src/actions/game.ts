@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getWordForMode, evaluateGuess, isValidWord } from "@/lib/game/words";
 import { calculatePayout, getBaseEntryForMode, getStakeLimits } from "@/lib/game/engine";
+import { checkTrophiesAfterGame } from "./trophies";
 import type { HintType, GameStatus, GameMode } from "@/lib/types";
 
 export async function initGame(gameMode: GameMode, stake?: number) {
@@ -11,39 +12,34 @@ export async function initGame(gameMode: GameMode, stake?: number) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile) throw new Error("Profile not found");
-
   const baseEntry = getBaseEntryForMode(gameMode);
   const entryCost = stake ?? baseEntry;
   const limits = getStakeLimits(gameMode);
   if (entryCost < limits.min || entryCost > limits.max) throw new Error("Invalid stake");
 
-  if (profile.bankroll < entryCost) throw new Error("Insufficient chips");
+  const [profile, todayCheck] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", user.id).single(),
+    gameMode === "DAILY"
+      ? supabase
+          .from("game_sessions")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("game_mode", "DAILY")
+          .gte("created_at", new Date().toISOString().split("T")[0])
+          .single()
+      : Promise.resolve({ data: null }),
+  ]);
 
-  if (gameMode === "DAILY") {
-    const { data: todayGame } = await supabase
-      .from("game_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("game_mode", "DAILY")
-      .gte("created_at", new Date().toISOString().split("T")[0])
-      .single();
-
-    if (todayGame) throw new Error("Already played daily mode today");
-  }
+  if (!profile.data) throw new Error("Profile not found");
+  if (todayCheck.data) throw new Error("Already played daily mode today");
+  if (profile.data.bankroll < entryCost) throw new Error("Insufficient chips");
 
   if (gameMode === "HIGH_ROLLER") {
-    if (profile.bankroll < 5000) throw new Error("5,000 chips required for The Penthouse");
-    if (profile.heat_streak < 3) throw new Error("3-win Hot Streak required for The Penthouse");
+    if (profile.data.bankroll < 5000) throw new Error("5,000 chips required for The Penthouse");
+    if (profile.data.heat_streak < 3) throw new Error("3-win Hot Streak required for The Penthouse");
   }
 
-  const targetWord = getWordForMode(gameMode, profile.heat_streak);
+  const targetWord = getWordForMode(gameMode, profile.data.heat_streak);
 
   const { data: game, error } = await supabase
     .from("game_sessions")
@@ -66,11 +62,11 @@ export async function initGame(gameMode: GameMode, stake?: number) {
 
   await supabase
     .from("profiles")
-    .update({ bankroll: profile.bankroll - entryCost })
+    .update({ bankroll: profile.data.bankroll - entryCost })
     .eq("id", user.id);
 
   revalidatePath("/dashboard");
-  return { gameId: game.id, bankroll: profile.bankroll - entryCost };
+  return { gameId: game.id, bankroll: profile.data.bankroll - entryCost };
 }
 
 export async function submitGuess(
@@ -178,7 +174,6 @@ export async function submitGuess(
         .eq("id", user.id);
 
       if (newStatus === "WON") {
-        const { checkTrophiesAfterGame } = await import("./trophies");
         await checkTrophiesAfterGame({
           won: true,
           row,
@@ -316,6 +311,13 @@ export async function useHintAction(
   const hintsUsed = game.hints_used as HintType[];
   if (hintsUsed.includes(hintType)) throw new Error("Hint already used");
 
+  const hintCosts = { card_count: 15, peek: 30, insurance: 25 };
+  const cost = game.entry_stake
+    ? Math.floor(hintCosts[hintType] * (game.entry_stake / getBaseEntryForMode(game.game_mode)))
+    : hintCosts[hintType];
+
+  if (game.current_chips_escrow < cost) throw new Error("Insufficient chips for hint");
+
   let result: { lettersToReveal?: string[]; lettersToBurn?: string[] } = {};
 
   if (hintType === "peek") {
@@ -333,7 +335,11 @@ export async function useHintAction(
 
   await supabase
     .from("game_sessions")
-    .update({ hints_used: [...hintsUsed, hintType] })
+    .update({
+      hints_used: [...hintsUsed, hintType],
+      current_chips_escrow: game.current_chips_escrow - cost,
+      total_costs_incurred: (game.total_costs_incurred || 0) + cost,
+    })
     .eq("id", gameId);
 
   return result;

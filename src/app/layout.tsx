@@ -17,6 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "CUSP",
   description: "On the edge of a win — every guess is a transaction.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cusp-game.vercel.app"),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

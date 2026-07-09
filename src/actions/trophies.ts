@@ -55,8 +55,10 @@ export async function checkTrophiesAfterGame(gameResult: {
     toInsert.push("lucky_guess");
   }
 
-  for (const trophyId of toInsert) {
-    await supabase.from("trophies").insert({ user_id: user.id, trophy_id: trophyId }).maybeSingle();
+  if (toInsert.length > 0) {
+    await supabase.from("trophies").insert(
+      toInsert.map((trophyId) => ({ user_id: user.id, trophy_id: trophyId }))
+    );
   }
 }
 

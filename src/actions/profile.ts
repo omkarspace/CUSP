@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { checkLoginTrophy } from "./trophies";
 
 export async function updateUsername(username: string) {
   const supabase = await createClient();
@@ -41,6 +42,8 @@ export async function claimDailyLogin() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
+  const today = new Date().toISOString().split("T")[0];
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("bankroll, login_streak, last_login_date")
@@ -48,8 +51,6 @@ export async function claimDailyLogin() {
     .single();
 
   if (!profile) throw new Error("Profile not found");
-
-  const today = new Date().toISOString().split("T")[0];
   if (profile.last_login_date === today) {
     throw new Error("Daily Comp already claimed today");
   }
@@ -73,7 +74,6 @@ export async function claimDailyLogin() {
     })
     .eq("id", user.id);
 
-  const { checkLoginTrophy } = await import("./trophies");
   await checkLoginTrophy(newStreak);
 
   revalidatePath("/dashboard");

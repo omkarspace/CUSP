@@ -36,28 +36,26 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     hasInsurance: boolean;
   } | null>(null);
 
-  const {
-    boardGrid,
-    tileStates,
-    keyboardState,
-    currentRow,
-    currentCol,
-    currentChips,
-    isDoubleDownActive,
-    gameStatus,
-    hintsUsed,
-    cardCountRemaining,
-    burnedLetters,
-    hydrateFromServer,
-    setGameId: storeSetGameId,
-    typeLetter,
-    deleteLetter,
-    submitGuess: storeSubmitGuess,
-    activateDoubleDown,
-    useHint,
-    resetGame,
-    setStatus,
-  } = useGameStore();
+  const boardGrid = useGameStore((s) => s.boardGrid);
+  const tileStates = useGameStore((s) => s.tileStates);
+  const keyboardState = useGameStore((s) => s.keyboardState);
+  const currentRow = useGameStore((s) => s.currentRow);
+  const currentCol = useGameStore((s) => s.currentCol);
+  const currentChips = useGameStore((s) => s.currentChips);
+  const isDoubleDownActive = useGameStore((s) => s.isDoubleDownActive);
+  const gameStatus = useGameStore((s) => s.gameStatus);
+  const hintsUsed = useGameStore((s) => s.hintsUsed);
+  const cardCountRemaining = useGameStore((s) => s.cardCountRemaining);
+  const burnedLetters = useGameStore((s) => s.burnedLetters);
+  const hydrateFromServer = useGameStore((s) => s.hydrateFromServer);
+  const storeSetGameId = useGameStore((s) => s.setGameId);
+  const typeLetter = useGameStore((s) => s.typeLetter);
+  const deleteLetter = useGameStore((s) => s.deleteLetter);
+  const storeSubmitGuess = useGameStore((s) => s.submitGuess);
+  const activateDoubleDown = useGameStore((s) => s.activateDoubleDown);
+  const useHint = useGameStore((s) => s.useHint);
+  const resetGame = useGameStore((s) => s.resetGame);
+  const setStatus = useGameStore((s) => s.setStatus);
 
   const [shakeTrigger, setShakeTrigger] = useState(0);
   const prevIsDoubleDown = useRef(false);
