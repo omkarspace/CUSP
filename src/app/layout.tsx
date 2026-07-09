@@ -14,10 +14,51 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cusp-game.vercel.app";
+
 export const metadata: Metadata = {
-  title: "CUSP",
-  description: "On the edge of a win — every guess is a transaction.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://cusp-game.vercel.app"),
+  title: {
+    default: "CUSP — On the edge of a win | Word Game",
+    template: "%s | CUSP",
+  },
+  description: "On the edge of a win — every guess is a transaction. Wager chips, solve the word, collect your payout.",
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "CUSP — On the edge of a win | Word Game",
+    description: "Wager chips on each round, solve the word, collect your payout — or walk away empty. A word game with real stakes.",
+    url: siteUrl,
+    siteName: "CUSP",
+    type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CUSP — On the edge of a win",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CUSP — On the edge of a win | Word Game",
+    description: "Wager chips on each round, solve the word, collect your payout — or walk away empty.",
+    images: ["/opengraph-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

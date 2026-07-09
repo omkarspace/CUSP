@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { LoginForm } from "@/components/layout/login-form";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+  description: "Sign in to CUSP and start playing word games with real stakes.",
+  robots: { index: true, follow: true },
+};
 
 export default async function LoginPage(props: { searchParams?: Promise<{ error?: string }> }) {
   const supabase = await createClient();

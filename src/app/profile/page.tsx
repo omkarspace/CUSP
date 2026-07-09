@@ -15,6 +15,13 @@ function getCompsLevel(lifetime: number): string {
   return "BRONZE";
 }
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  robots: { index: false, follow: false },
+};
+
 export default async function ProfilePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

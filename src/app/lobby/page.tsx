@@ -11,6 +11,13 @@ const MODE_INFO: Record<string, { title: string; desc: string; requiredBankroll:
   HIGH_ROLLER: { title: "The Penthouse", desc: "Hard words, 2x payouts. The big leagues.", requiredBankroll: 5000, requiredStreak: 3 },
 };
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Betting Lobby",
+  robots: { index: false, follow: false },
+};
+
 export default async function LobbyPage(props: { searchParams: Promise<{ mode?: string }> }) {
   const { mode } = await props.searchParams;
   if (!mode || !["DAILY", "INFINITE", "HIGH_ROLLER"].includes(mode)) redirect("/dashboard");

@@ -3,6 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { LeaderboardTable } from "@/components/casino/leaderboard-table";
 import { ShareCard } from "@/components/casino/share-card";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "The Board",
+  description: "Weekly leaderboard for CUSP. See who's on top and claim your spot.",
+  robots: { index: true, follow: true },
+};
+
 export default async function LeaderboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

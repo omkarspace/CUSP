@@ -1,4 +1,10 @@
-"use client";
+import type { Metadata } from "next";
+import { RetryButton } from "@/components/layout/retry-button";
+
+export const metadata: Metadata = {
+  title: "Offline",
+  robots: { index: false, follow: false },
+};
 
 export default function OfflinePage() {
   return (
@@ -12,12 +18,7 @@ export default function OfflinePage() {
       <p className="mt-3 text-sm leading-relaxed text-ink-secondary">
         Wager rounds require a network connection. Check your connection and try again.
       </p>
-      <button
-        onClick={() => window.location.reload()}
-        className="mt-8 rounded-lg bg-accent px-6 py-3 font-label text-xs text-white transition-all hover:opacity-90 active:scale-[0.98]"
-      >
-        Retry
-      </button>
+      <RetryButton />
     </main>
   );
 }

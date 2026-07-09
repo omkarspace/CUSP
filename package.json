@@ -2,6 +2,9 @@
   "name": "cusp",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://cusp-game.vercel.app",
+  "author": "CUSP",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

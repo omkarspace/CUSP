@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { HeroEnter, SectionReveal, StaggerGrid, StaggerItem } from "@/components/landing/animations";
 import { GameGridPreview } from "@/components/landing/game-grid";
+import { JsonLd } from "@/components/landing/json-ld";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -11,6 +12,7 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-6xl px-6">
+      <JsonLd />
       <nav className="flex items-center justify-between py-5">
         <span className="text-lg font-semibold tracking-tight text-ink">CUSP</span>
         <div className="flex items-center gap-3">
