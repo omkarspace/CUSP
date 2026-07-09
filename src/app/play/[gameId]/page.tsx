@@ -32,6 +32,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     gameStatus,
     hintsUsed,
     cardCountRemaining,
+    burnedLetters,
     hydrateFromServer,
     setGameId: storeSetGameId,
     typeLetter,
@@ -140,17 +141,24 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     setMessage("DOUBLE DOWN ACTIVATED - All or nothing!");
   }, [activateDoubleDown]);
 
-  const handleFold = useCallback(() => {
-    setStatus("FOLDED");
-    setMessage("Folded. You preserved your remaining chips.");
-  }, [setStatus]);
+  const handleFold = useCallback(async () => {
+    if (!gameId) return;
+    try {
+      const { foldGame } = await import("@/actions/game");
+      const result = await foldGame(gameId);
+      setStatus("FOLDED");
+      setMessage(`Folded. Retained ${result.returnedChips.toLocaleString()} chips.`);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Fold failed");
+    }
+  }, [gameId, setStatus]);
 
   const handleHint = useCallback(
     async (hint: HintType) => {
       if (!gameId) return;
       try {
-        await useHintAction(gameId, hint);
-        useHint(hint);
+        const result = await useHintAction(gameId, hint);
+        useHint(hint, hint === "card_count" ? result.lettersToBurn : undefined);
         setMessage(`Hint applied: ${hint.replace("_", " ")}`);
       } catch (err) {
         setMessage(err instanceof Error ? err.message : "Hint failed");
@@ -224,6 +232,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
               onDelete={handleDelete}
               onEnter={handleSubmit}
               disabled={loading || isRevealing || gameStatus !== "IN_PROGRESS"}
+              burnedLetters={burnedLetters}
             />
           </div>
 

@@ -9,6 +9,7 @@ interface VirtualKeyboardProps {
   onDelete: () => void;
   onEnter: () => void;
   disabled?: boolean;
+  burnedLetters?: string[];
 }
 
 const ROWS = [
@@ -30,6 +31,7 @@ export function VirtualKeyboard({
   onDelete,
   onEnter,
   disabled,
+  burnedLetters = [],
 }: VirtualKeyboardProps) {
   const handleKey = (key: string) => {
     if (disabled) return;
@@ -52,20 +54,30 @@ export function VirtualKeyboard({
             const state = keyboardState[key] || "empty";
             const isAction = key === "ENTER" || key === "\u232B";
 
+            const isBurned = burnedLetters.includes(key);
             return (
               <button
                 key={key}
                 onClick={() => handleKey(key)}
                 disabled={disabled || state === "absent"}
                 className={`
-                  flex items-center justify-center rounded-md border font-label text-xs
+                  relative flex items-center justify-center rounded-md border font-label text-xs
                   transition-colors duration-150
                   h-11 sm:h-14
                   ${isAction ? "flex-[1.5]" : "flex-1 min-w-0"}
                   ${stateStyles[state]}
+                  ${isBurned ? "opacity-30" : ""}
                   ${disabled ? "opacity-50 cursor-not-allowed" : "active:scale-95 touch-manipulation"}
                 `}
               >
+                {isBurned && (
+                  <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-rose">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </span>
+                )}
                 <span className="truncate">
                   {key === "\u232B" ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

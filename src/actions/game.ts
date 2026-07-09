@@ -188,6 +188,48 @@ export async function submitGuess(
   return { tileStates, isWin, status: newStatus, message, updatedChips: newEscrow, insuranceRefund };
 }
 
+export async function foldGame(gameId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const { data: game } = await supabase
+    .from("game_sessions")
+    .select("*")
+    .eq("id", gameId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!game || game.status !== "IN_PROGRESS") throw new Error("Game not active");
+
+  const escrowReturn = game.current_chips_escrow;
+
+  await supabase
+    .from("game_sessions")
+    .update({ status: "FOLDED" })
+    .eq("id", gameId);
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("bankroll, total_games_played")
+    .eq("id", user.id)
+    .single();
+
+  if (profile) {
+    await supabase
+      .from("profiles")
+      .update({
+        bankroll: (profile.bankroll || 0) + escrowReturn,
+        total_games_played: (profile.total_games_played || 0) + 1,
+      })
+      .eq("id", user.id);
+  }
+
+  revalidatePath("/play/[gameId]", "page");
+  revalidatePath("/dashboard");
+  return { returnedChips: escrowReturn };
+}
+
 export async function getGameState(gameId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

@@ -10,6 +10,7 @@ const ALL_TROPHIES = [
   { id: "grinder", label: "The Grinder", desc: "Play 100 games" },
   { id: "lucky_guess", label: "Lucky Guess", desc: "Win on Row 1" },
   { id: "loyal_patron", label: "Loyal Patron", desc: "Reach a 7-day login streak" },
+  { id: "board_king", label: "Board King", desc: "Top the weekly leaderboard" },
 ] as const;
 
 export type TrophyId = (typeof ALL_TROPHIES)[number]["id"];

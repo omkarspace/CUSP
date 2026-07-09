@@ -24,6 +24,7 @@ interface GameStore {
 
   hintsUsed: HintType[];
   cardCountRemaining: number;
+  burnedLetters: string[];
 
   hydrateFromServer: (data: ServerGameState) => void;
   setGameId: (id: string) => void;
@@ -32,7 +33,7 @@ interface GameStore {
   deleteLetter: () => void;
   submitGuess: (guess: string, states: TileState[]) => void;
   activateDoubleDown: () => void;
-  useHint: (hint: HintType) => void;
+  useHint: (hint: HintType, lettersToBurn?: string[]) => void;
   resetGame: () => void;
   setStatus: (status: GameStatus) => void;
 }
@@ -52,6 +53,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   hintsUsed: [],
   cardCountRemaining: 2,
+  burnedLetters: [],
 
   hydrateFromServer: (data) =>
     set({
@@ -119,13 +121,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   activateDoubleDown: () => set({ isDoubleDownActive: true }),
 
-  useHint: (hint) => {
+  useHint: (hint: HintType, lettersToBurn?: string[]) => {
     const { hintsUsed, cardCountRemaining } = get();
     if (hint === "card_count" && cardCountRemaining <= 0) return;
 
     set({
       hintsUsed: [...hintsUsed, hint],
       cardCountRemaining: hint === "card_count" ? cardCountRemaining - 1 : cardCountRemaining,
+      burnedLetters: hint === "card_count" && lettersToBurn ? lettersToBurn : [],
     });
   },
 
@@ -141,6 +144,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameId: null,
       hintsUsed: [],
       cardCountRemaining: 2,
+      burnedLetters: [],
     }),
 
   setStatus: (status) => set({ gameStatus: status }),
