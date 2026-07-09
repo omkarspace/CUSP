@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getWordForMode, evaluateGuess, isValidWord } from "@/lib/game/words";
-import { calculatePayout } from "@/lib/game/engine";
-import type { HintType, GameStatus } from "@/lib/types";
+import { calculatePayout, getBaseEntryForMode, getStakeLimits } from "@/lib/game/engine";
+import type { HintType, GameStatus, GameMode } from "@/lib/types";
 
-export async function initGame(gameMode: "DAILY" | "INFINITE" | "HIGH_ROLLER") {
+export async function initGame(gameMode: GameMode, stake?: number) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
@@ -18,6 +18,13 @@ export async function initGame(gameMode: "DAILY" | "INFINITE" | "HIGH_ROLLER") {
     .single();
 
   if (!profile) throw new Error("Profile not found");
+
+  const baseEntry = getBaseEntryForMode(gameMode);
+  const entryCost = stake ?? baseEntry;
+  const limits = getStakeLimits(gameMode);
+  if (entryCost < limits.min || entryCost > limits.max) throw new Error("Invalid stake");
+
+  if (profile.bankroll < entryCost) throw new Error("Insufficient chips");
 
   if (gameMode === "DAILY") {
     const { data: todayGame } = await supabase
@@ -37,9 +44,6 @@ export async function initGame(gameMode: "DAILY" | "INFINITE" | "HIGH_ROLLER") {
   }
 
   const targetWord = getWordForMode(gameMode, profile.heat_streak);
-  const entryCost = gameMode === "INFINITE" ? 50 : gameMode === "HIGH_ROLLER" ? 50 : 10;
-
-  if (profile.bankroll < entryCost) throw new Error("Insufficient chips");
 
   const { data: game, error } = await supabase
     .from("game_sessions")
@@ -47,6 +51,7 @@ export async function initGame(gameMode: "DAILY" | "INFINITE" | "HIGH_ROLLER") {
       user_id: user.id,
       game_mode: gameMode,
       target_word: targetWord,
+      entry_stake: entryCost,
       current_chips_escrow: entryCost,
       current_row: 1,
       is_double_down: false,
@@ -95,6 +100,8 @@ export async function submitGuess(
 
   const isPenthouse = game.game_mode === "HIGH_ROLLER";
   const modeMultiplier = isPenthouse ? 2 : 1;
+  const baseEntry = getBaseEntryForMode(game.game_mode);
+  const scaleFactor = game.entry_stake ? game.entry_stake / baseEntry : 1;
 
   let newStatus: GameStatus = "IN_PROGRESS";
   let message = "";
@@ -119,7 +126,7 @@ export async function submitGuess(
     .select("heat_streak")
     .eq("id", user.id)
     .single();
-  const { cost, payout } = calculatePayout(row, isWin, currentProfile?.heat_streak || 0);
+  const { cost, payout } = calculatePayout(row, isWin, currentProfile?.heat_streak || 0, scaleFactor);
   const adjustedPayout = Math.floor(payout * modeMultiplier);
   const newEscrow = game.current_chips_escrow + adjustedPayout - cost;
   const newTotalCosts = (game.total_costs_incurred || 0) + cost;
@@ -248,6 +255,7 @@ export async function getGameState(gameId: string) {
     gameMode: game.game_mode,
     currentRow: game.current_row,
     currentChipsEscrow: game.current_chips_escrow,
+    entryStake: game.entry_stake,
     isDoubleDown: game.is_double_down,
     hintsUsed: game.hints_used as string[],
     status: game.status,

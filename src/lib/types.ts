@@ -2,7 +2,7 @@ export type TileState = "correct" | "present" | "absent" | "empty";
 
 export type GameStatus = "IN_PROGRESS" | "WON" | "BANKRUPT" | "FOLDED";
 
-export type GameMode = "DAILY" | "INFINITE";
+export type GameMode = "DAILY" | "INFINITE" | "HIGH_ROLLER";
 
 export interface GameSession {
   id: string;
@@ -18,6 +18,7 @@ export interface GameSession {
   boardGrid: string[][];
   tileStates: TileState[][];
   createdAt: string;
+  entryStake: number;
 }
 
 export type HintType = "card_count" | "peek" | "insurance";
@@ -63,3 +64,28 @@ export const HINT_COSTS: Record<HintType, number> = {
   peek: 30,
   insurance: 25,
 };
+
+export function scaleHintCosts(scale: number): Record<HintType, number> {
+  return {
+    card_count: Math.floor(HINT_COSTS.card_count * scale),
+    peek: Math.floor(HINT_COSTS.peek * scale),
+    insurance: Math.floor(HINT_COSTS.insurance * scale),
+  };
+}
+
+export function getScaledPayoutTable(scale: number, hotStreak: number) {
+  return COST_MATRIX.map((row) => {
+    let multiplier = 1;
+    for (const { minStreak, multiplier: m } of STREAK_MULTIPLIERS) {
+      if (hotStreak >= minStreak) {
+        multiplier = m;
+        break;
+      }
+    }
+    return {
+      row: row.row,
+      cost: Math.floor(row.cost * scale),
+      payout: Math.floor(row.payout * multiplier * scale),
+    };
+  });
+}
