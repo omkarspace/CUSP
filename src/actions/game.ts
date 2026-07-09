@@ -237,6 +237,40 @@ export async function foldGame(gameId: string) {
   return { returnedChips: escrowReturn };
 }
 
+export async function getGameEndData(gameId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const { data: game } = await supabase
+    .from("game_sessions")
+    .select("game_mode, target_word, current_chips_escrow, current_row, is_double_down, hints_used, total_costs_incurred, entry_stake, status")
+    .eq("id", gameId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!game || game.status === "IN_PROGRESS") throw new Error("Game not ended");
+
+  const hintsUsed = (game.hints_used || []) as string[];
+  const hasInsurance = hintsUsed.includes("insurance");
+  const insuranceRefund = game.status === "BANKRUPT" && hasInsurance
+    ? Math.floor((game.total_costs_incurred || 0) * 0.5)
+    : 0;
+
+  return {
+    gameMode: game.game_mode,
+    targetWord: game.target_word,
+    finalEscrow: game.current_chips_escrow,
+    rowsUsed: Math.min(game.current_row - 1, 6),
+    isDoubleDown: game.is_double_down || false,
+    hintsUsed,
+    entryStake: game.entry_stake || 10,
+    status: game.status,
+    insuranceRefund,
+    hasInsurance,
+  };
+}
+
 export async function getGameState(gameId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

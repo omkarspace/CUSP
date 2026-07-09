@@ -8,6 +8,7 @@ import { WordleGrid } from "@/components/game/wordle-grid";
 import { VirtualKeyboard } from "@/components/game/virtual-keyboard";
 import { EscrowHud } from "@/components/game/escrow-hud";
 import { ActionDeck } from "@/components/game/action-deck";
+import { GameEndModal } from "@/components/game/game-end-modal";
 import { useGameStore } from "@/stores/game-store";
 import { submitGuess, useHintAction } from "@/actions/game";
 import type { HintType } from "@/lib/types";
@@ -20,6 +21,18 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
   const [isRevealing, setIsRevealing] = useState(false);
   const [shakeRow, setShakeRow] = useState(false);
   const [message, setMessage] = useState("");
+  const [endGameData, setEndGameData] = useState<{
+    gameMode: string;
+    targetWord: string;
+    status: "WON" | "BANKRUPT" | "FOLDED";
+    finalEscrow: number;
+    rowsUsed: number;
+    isDoubleDown: boolean;
+    hintsUsed: string[];
+    entryStake: number;
+    insuranceRefund: number;
+    hasInsurance: boolean;
+  } | null>(null);
 
   const {
     boardGrid,
@@ -69,6 +82,21 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     }
     prevGameStatus.current = gameStatus;
   }, [gameStatus]);
+
+  useEffect(() => {
+    if (gameStatus !== "IN_PROGRESS" && gameId && !endGameData) {
+      const fetchEndData = async () => {
+        try {
+          const { getGameEndData } = await import("@/actions/game");
+          const data = await getGameEndData(gameId);
+          setEndGameData(data);
+        } catch {
+          // fallback
+        }
+      };
+      fetchEndData();
+    }
+  }, [gameStatus, gameId, endGameData]);
 
   useEffect(() => {
     params.then((p) => {
@@ -236,23 +264,19 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
             />
           </div>
 
-          {gameStatus !== "IN_PROGRESS" && (
-            <div className="rounded-xl border border-border bg-surface p-6 text-center">
-              <h2 className="text-2xl font-semibold text-ink">
-                {gameStatus === "WON" ? "Winner" : gameStatus === "BANKRUPT" ? "Bankrupt" : "Folded"}
-              </h2>
-              <p className="mt-2 text-sm text-ink-secondary">{message}</p>
-              <button
-                onClick={() => {
-                  resetGame();
-                  router.push("/dashboard");
-                }}
-                className="mt-4 rounded-lg bg-accent px-6 py-2 font-label text-xs text-white transition-all hover:bg-accent-dark active:scale-[0.98]"
-              >
-                Back to Hub
-              </button>
-            </div>
-          )}
+          <GameEndModal
+            open={gameStatus !== "IN_PROGRESS"}
+            gameMode={endGameData?.gameMode || ""}
+            targetWord={endGameData?.targetWord || ""}
+            status={(endGameData?.status || gameStatus) as "WON" | "BANKRUPT" | "FOLDED"}
+            finalEscrow={endGameData?.finalEscrow || 0}
+            rowsUsed={endGameData?.rowsUsed || 0}
+            isDoubleDown={endGameData?.isDoubleDown || false}
+            hintsUsed={endGameData?.hintsUsed || []}
+            entryStake={endGameData?.entryStake || 0}
+            insuranceRefund={endGameData?.insuranceRefund || 0}
+            hasInsurance={endGameData?.hasInsurance || false}
+          />
           </motion.div>
         </div>
       </main>
