@@ -9,6 +9,7 @@ import { VirtualKeyboard } from "@/components/game/virtual-keyboard";
 import { EscrowHud } from "@/components/game/escrow-hud";
 import { ActionDeck } from "@/components/game/action-deck";
 import { GameEndModal } from "@/components/game/game-end-modal";
+import { Confetti } from "@/components/game/confetti";
 import { useGameStore } from "@/stores/game-store";
 import { submitGuess, useHintAction } from "@/actions/game";
 import type { HintType } from "@/lib/types";
@@ -21,6 +22,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
   const [isRevealing, setIsRevealing] = useState(false);
   const [shakeRow, setShakeRow] = useState(false);
   const [message, setMessage] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
   const [endGameData, setEndGameData] = useState<{
     gameMode: string;
     targetWord: string;
@@ -60,6 +62,14 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
   const [shakeTrigger, setShakeTrigger] = useState(0);
   const prevIsDoubleDown = useRef(false);
   const prevGameStatus = useRef<string>("IN_PROGRESS");
+  const prevChips = useRef(currentChips);
+
+  useEffect(() => {
+    if (currentChips < prevChips.current) {
+      playSound("chip_clink");
+    }
+    prevChips.current = currentChips;
+  }, [currentChips]);
 
   useEffect(() => {
     if (isDoubleDownActive && !prevIsDoubleDown.current) {
@@ -76,6 +86,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     }
     if (gameStatus === "WON" && prevGameStatus.current !== "WON") {
       playSound("win_jingle");
+      setShowConfetti(true);
     }
     if (gameStatus === "FOLDED" && prevGameStatus.current !== "FOLDED") {
       playSound("fold");
@@ -123,6 +134,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     (key: string) => {
       if (loading || isRevealing || gameStatus !== "IN_PROGRESS") return;
       typeLetter(key);
+      playSound("key_press");
     },
     [loading, isRevealing, gameStatus, typeLetter]
   );
@@ -146,6 +158,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     setIsRevealing(true);
 
     try {
+      playSound("key_enter");
       const result = await submitGuess(gameId, guess, currentRow + 1, isDoubleDownActive);
 
       storeSubmitGuess(guess, result.tileStates);
@@ -185,6 +198,7 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
     async (hint: HintType) => {
       if (!gameId) return;
       try {
+        playSound("hint_use");
         const result = await useHintAction(gameId, hint);
         useHint(hint, hint === "card_count" ? result.lettersToBurn : undefined);
         setMessage(`Hint applied: ${hint.replace("_", " ")}`);
@@ -263,6 +277,8 @@ export default function GameTablePage({ params }: { params: Promise<{ gameId: st
               burnedLetters={burnedLetters}
             />
           </div>
+
+          {showConfetti && <Confetti />}
 
           <GameEndModal
             open={gameStatus !== "IN_PROGRESS"}
