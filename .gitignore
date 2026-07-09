@@ -8,3 +8,5 @@ next-env.d.ts
 .gemini
 .lcm
 .opencode
+supabase/.temp
+docs/superpowers

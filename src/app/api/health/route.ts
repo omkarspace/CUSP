@@ -3,5 +3,12 @@ import { NextResponse } from "next/server";
 export const runtime = "edge";
 
 export async function GET() {
-  return NextResponse.json({ status: "ok" });
+  return NextResponse.json({
+    status: "ok",
+    env: {
+      supabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      supabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+      siteUrl: !!process.env.NEXT_PUBLIC_SITE_URL,
+    },
+  });
 }

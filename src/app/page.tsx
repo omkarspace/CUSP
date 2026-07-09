@@ -5,10 +5,13 @@ import { GameGridPreview } from "@/components/landing/game-grid";
 import { JsonLd } from "@/components/landing/json-ld";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (user) redirect("/dashboard");
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) redirect("/dashboard");
+  } catch {
+    // no-op — missing env or network, show landing as-is
+  }
 
   return (
     <main className="mx-auto min-h-screen max-w-6xl px-6">
