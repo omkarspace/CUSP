@@ -32,7 +32,7 @@ export default async function LeaderboardPage() {
   return (
     <>
       <Nav userEmail={user?.email} />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-nav">
         <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold text-ink">The Board</h1>

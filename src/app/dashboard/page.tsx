@@ -43,7 +43,7 @@ export default async function DashboardPage() {
   return (
     <>
       <Nav userEmail={user.email} />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-nav">
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">

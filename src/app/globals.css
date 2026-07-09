@@ -160,6 +160,14 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  .safe-area-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+  }
+
+  .pb-nav {
+    padding-bottom: max(64px, calc(64px + env(safe-area-inset-bottom, 0px)));
+  }
 }
 
 @keyframes tile-flip {

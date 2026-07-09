@@ -35,7 +35,7 @@ export default async function LobbyPage(props: { searchParams: Promise<{ mode?: 
   return (
     <>
       <Nav userEmail={user.email} />
-      <main className="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8">
+      <main className="mx-auto max-w-2xl px-4 sm:px-6 py-6 sm:py-8 pb-nav">
         <LobbyClient
           gameMode={gameMode}
           title={info.title}

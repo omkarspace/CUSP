@@ -56,7 +56,7 @@ export default async function ProfilePage() {
   return (
     <>
       <Nav userEmail={user.email} />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-nav">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
